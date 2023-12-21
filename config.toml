@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # # # # # # #
-# WARNING: each execution will erase both 'schema' and 'output' folders
-# Time formatting documentation:
+# WARNING: each execution will override the files unless you have them open.
+# Proper datetime formatting for date columns documentation:
 # https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
 # # # # # # # # # # # # # # # # # # # #
 
@@ -9,45 +9,44 @@
 float_thousands_delimiter = '.'
 float_decimal_point_delimiter = ','
 
-# column header name to tell apart each file in the same table
-# this is an option just in case the name is an existir column,
+# column header name created to tell apart each file query result and its source,
+# this is just an option just in case the name conflicts with a column.
 path_column = 'Source File'
 
 # output extension is 'csv' or 'xlsx' file.
 print_file = 'csv'
 
-# Default delimiter for CSV, can be overwritten, comment tries to guess the delimiter
+# Default delimiter for CSV, can be overwritten, comment for default delimiter guessing.
 default_csv_delimiter = ';'
 
-# Default header option for csv/xlsx, row number for header,
-# comment the option if tables don't have header
+# Default header option for 'csv' and 'xlsx' files, number represents row's header.
+# if your table doesn't have header simply comment the option to disable it.
 default_csv_header = 0
 default_xlsx_header = 0
 
+# This will create a new column for each column modified in [columns] option.
+# backup columns will have (old) prefix, this can be useful to backtrack if
+# there is any conversion problem. 'true' for backup, 'false' to override column.
 backup_modified_columns = false
 
-exclude = []
+# both 'csv' and 'xlsx' files to exclude from the querys if these files reside in the same folder.
+# leave empty list: [] if there is no file to exclude, do NOT comment the line.
+exclude = [
+  'table to ignore.xlsx'
+]
 
-[columns] # Convert dtypes
-# 'Temp. Date' = { format = '%Y%m%d' }
-'Peso Orden' = 'float'
+[columns]
+# Convert columns to proper datatypes
+# supported int, float, double, date and any numpy type.
+# To format dates, formatter syntax at the header of this file.<
+'Temp_Date' = { format = '%Y%m%d' }
+'Column_Name' = 'float'
 
-[query] # 'df' refence all the tables simultaneously
+[query]
+# 'df' refers to all the tables simultaneously, you can 'SELECT column FROM df'.
+# the program assumes the tables as equal (atleast the specified columns to infer data types)
 sql = '''
-SELECT SUM("Peso Orden")
+SELECT *
 FROM df
+WHERE "Temp_Date" > '2023-01-01'
 '''
-
-# TODO: 
-# enable loading multiple sheets
-#[[tables]]
-#[tables.'xlsa asD sdas']
-#'name' = 'nameasd'
-#[tables.'xlsa sdas']
-#'name' = 'nameas232d'
-
-# TODO:
-# CURRENTLY NOT SUPPORTED:
-# Print schema on a .txt to check proper conversion.
-# Recomended to use this combined with backup_modified_columns
-# print_schema = false
