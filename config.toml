@@ -1,0 +1,53 @@
+# # # # # # # # # # # # # # # # # # # #
+# WARNING: each execution will erase both 'schema' and 'output' folders
+# Time formatting documentation:
+# https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
+# # # # # # # # # # # # # # # # # # # #
+
+[options]
+# Parse decimals values correctly, default is 'None' for thousands and '.' for decimal point.
+float_thousands_delimiter = '.'
+float_decimal_point_delimiter = ','
+
+# column header name to tell apart each file in the same table
+# this is an option just in case the name is an existir column,
+path_column = 'Source File'
+
+# output extension is 'csv' or 'xlsx' file.
+print_file = 'csv'
+
+# Default delimiter for CSV, can be overwritten, comment tries to guess the delimiter
+default_csv_delimiter = ';'
+
+# Default header option for csv/xlsx, row number for header,
+# comment the option if tables don't have header
+default_csv_header = 0
+default_xlsx_header = 0
+
+backup_modified_columns = false
+
+exclude = []
+
+[columns] # Convert dtypes
+# 'Temp. Date' = { format = '%Y%m%d' }
+'Peso Orden' = 'float'
+
+[query] # 'df' refence all the tables simultaneously
+sql = '''
+SELECT SUM("Peso Orden")
+FROM df
+'''
+
+# TODO: 
+# enable loading multiple sheets
+#[[tables]]
+#[tables.'xlsa asD sdas']
+#'name' = 'nameasd'
+#[tables.'xlsa sdas']
+#'name' = 'nameas232d'
+
+# TODO:
+# CURRENTLY NOT SUPPORTED:
+# Print schema on a .txt to check proper conversion.
+# Recomended to use this combined with backup_modified_columns
+# print_schema = false
